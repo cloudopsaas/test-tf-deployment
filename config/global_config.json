@@ -1,0 +1,62 @@
+{   
+    "env_variables": {
+        "default_region": "eu-central-1",
+        "tf_state_s3_bucket": "gion-tf-state",
+        "tf_state_iam_role_arn": "arn:aws:iam::951100737550:role/cloudops-TerraformDeployerRole"
+        
+    },
+    "deployer_role": "TerraformDeployerRole",
+    "org_id": "o-szz2ko38qr",
+    "org_root_id": "r-vchl",
+    "naming_prefix": "cloudops-",
+    "resource_tags": {
+        "cost-center": "abcd1234",
+        "org-id": "IT",
+        "team-id": "cloudops",
+        "business-application-name": "cloud-platform",
+        "data-classification": "private",
+        "application-id": "cloud-platform",
+        "criticality": "critical",
+        "internet-reachable": "false",
+        "backup-schedule": "none"
+    },
+    "org_structure": {
+        "management_account": {
+            "name": "test4gion",
+            "id": "951100737550"
+        },
+        "dev": {
+            "ou_id": "ou-vknz-w46xk0e4",              
+            "accounts": {
+                "app_backend": {
+                    "id": "971422719884"
+                    },
+                "operations": {
+                    "id": "971422719884"
+                    }
+                }
+            },
+        "uat": {
+            "ou_id": "ou-vknz-pmhloeuk",              
+            "accounts": {
+                "app_backend": {
+                    "id": "354918405951"
+                    },
+                "operations": {
+                    "id": "354918405951"
+                    }
+                }
+            },
+        "prod": {
+            "ou_id": "ou-vknz-onp2fuq7",              
+            "accounts": {
+                "app_backend": {
+                    "id": "676206905072"
+                    },
+                "operations": {
+                    "id": "676206905072"
+                    }
+                }
+            }   
+    }
+}

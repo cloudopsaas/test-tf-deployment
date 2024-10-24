@@ -15,6 +15,9 @@ inputs:
     description: "Path to the local module config JSON file"
     required: true
     default: "config/module_config.json"
+  github_token:
+    description: "GITHUB TOKEN for checking out private repo"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -23,7 +26,7 @@ runs:
       with:
         repository: ${{ inputs.global_config_repo }}
         ref: ${{ inputs.global_config_version }} 
-        # token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.github_token }}
 
     - name: Read global config JSON and set environment variables
       shell: bash

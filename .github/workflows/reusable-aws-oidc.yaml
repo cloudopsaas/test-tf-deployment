@@ -35,10 +35,14 @@ jobs:
           else
             echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" >> $GITHUB_ENV
           fi
+          echo "ref name"
           echo $GITHUB_REF_NAME
-          echo $GITHUB_ENV
+          echo "region"
           echo ${{ env.TF_VAR_default_region }}
+          "echo role github"
           echo ${{ env.github_oidc_role }}
+          echo "envs"
+          echo $GITHUB_ENV
       
       # - uses: aws-actions/configure-aws-credentials@v4
       #   with:

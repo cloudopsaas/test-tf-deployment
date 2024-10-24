@@ -25,6 +25,10 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: pwd 
+      shell: bash
+      run: |
+        pwd
     - name: Checkout the global config repository
       uses: actions/checkout@v4
       with:

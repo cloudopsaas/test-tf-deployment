@@ -28,7 +28,8 @@ runs:
         ref: ${{ inputs.global_config_version }} 
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Read global config JSON file from external repository
+    - name: Read global config JSON and set environment variables
+      shell: bash
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})

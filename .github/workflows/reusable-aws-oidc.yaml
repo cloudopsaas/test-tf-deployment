@@ -20,7 +20,7 @@ jobs:
       - name: Read config and set env
         uses: ./.github/reusable/set_config_env
         with:
-          global_config_version: v1.0.1
+          global_config_version: v1.0.2
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Select Github OIDC role based on branch name

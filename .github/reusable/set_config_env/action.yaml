@@ -4,6 +4,7 @@ inputs:
   global_config_repo:
     description: "Repo containing global config JSON file"
     required: true
+    default: cloudopsaas/global-config
   global_config_version:
     description: "Version of the global config JSON file, specified as git tag"
     required: true
@@ -25,6 +26,7 @@ runs:
     - name: pwd 
       shell: bash
       run: |
+        mkdir temp_global_config
         pwd
         ls -a
     - name: Checkout the global config repository
@@ -33,15 +35,17 @@ runs:
         repository: ${{ inputs.global_config_repo }}
         ref: ${{ inputs.global_config_version }} 
         token: ${{ inputs.github_token }}
-        clean: false
+        path: ./temp_global_config
     - name: ls 
       shell: bash
+      working-directory: ./temp_global_config
       run: |
         ls -a
+        pwd
         echo $GITHUB_WORKSPACE
-        echo ${{ inputs.workdir }}
     - name: Read global config JSON and set environment variables
       shell: bash
+      working-directory: ./temp_global_config
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})

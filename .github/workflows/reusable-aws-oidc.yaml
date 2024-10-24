@@ -8,6 +8,8 @@ on:
       - dev
       - uat
       - prod
+      
+permissions: write-all
 
 jobs:
   assume_role:

@@ -1,0 +1,44 @@
+name: "Set Environment Variables from config files"
+description: "A reusable action to set environment variables from a JSON file"
+inputs:
+  global_config_repo:
+    description: "Repo containing global config JSON file"
+    required: true
+  global_config_version:
+    description: "Version of the global config JSON file, specified as git tag"
+    required: true
+  global_config_file_path:
+    description: "Path to the global module config JSON file"
+    required: true
+    default: "lz/global_config.json"
+  module_config_file_path:
+    description: "Path to the local module config JSON file"
+    required: true
+    default: "config/module_config.json"
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout this repository
+      uses: actions/checkout@v4
+
+    - name: Checkout the global config repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.global_config_repo }}
+        ref: ${{ inputs.global_config_version }} 
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Read global config JSON file from external repository
+      run: |
+        for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
+          value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
+          echo "$key=$value" >> $GITHUB_ENV
+        done
+
+    - name: Read module config JSON and set environment variables
+      shell: bash
+      run: |
+        for key in $(jq -r '.env_variables | keys[]' ${{ inputs.module_config_file_path }}); do
+          value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})
+          echo "$key=$value" >> $GITHUB_ENV
+        done

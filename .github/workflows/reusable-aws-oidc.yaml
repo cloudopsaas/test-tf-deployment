@@ -14,30 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     name: Assume Role
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: ls 
-        run: |
-          ls
+      # - name: Checkout repository
+      #   uses: actions/checkout@v2
+      # - name: ls 
+      #   run: |
+      #     ls
       # - uses: aws-actions/configure-aws-credentials@v4
       #   with:
       #       role-to-assume: arn:aws:iam::951100737550:role/GithubOIDC
       #       role-session-name: production-session
       #       aws-region: eu-central-1
 
+      - name: Read config and set env
+        uses: ../reusable/set_config_env
+        with:
+          global_config_repo: cloudopsaas/global-config
+          global_config_version: v1.0.0
 
-      - name: Read global config
-        run: |
-          for key in $(jq -r '.env_variables | keys[]' config/global_config.json); do
-            value=$(jq -r ".env_variables[\"$key\"]" config/global_config.json)
-            echo "$key=$value" >> $GITHUB_ENV
-          done
-      - name: Read module config
-        run: |
-          for key in $(jq -r '.env_variables | keys[]' config/module_config.json); do
-            value=$(jq -r ".env_variables[\"$key\"]" config/module_config.json)
-            echo "$key=$value" >> $GITHUB_ENV
-          done
       - name: Verify environment variables
         run: |
           echo $GITHUB_ENV

@@ -28,6 +28,9 @@ runs:
         ref: ${{ inputs.global_config_version }} 
         token: ${{ inputs.github_token }}
 
+    - name: ls 
+      run: |
+        ls -a
     - name: Read global config JSON and set environment variables
       shell: bash
       run: |

@@ -28,7 +28,7 @@ jobs:
       #       aws-region: eu-central-1
 
       - name: Read config and set env
-        uses: ./.github/reusable/set_config_env
+        uses: set_config_env
         with:
           global_config_repo: cloudopsaas/global-config
           global_config_version: v1.0.0

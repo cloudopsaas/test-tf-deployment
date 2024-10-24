@@ -19,33 +19,31 @@ inputs:
     description: "Path to the local module config JSON file"
     required: true
     default: "config/module_config.json"
+  temp_workspace:
+    description: "Name of the local folder where we checkout the global config repo"
+    required: true
+    default: "temp_global_config"
+  
   
 runs:
   using: "composite"
   steps:
-    - name: pwd 
+    - name: create temp workspace 
       shell: bash
       run: |
-        mkdir temp_global_config
-        pwd
-        ls -a
+        mkdir ${{ inputs.temp_workspace }}
+
     - name: Checkout the global config repository
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.global_config_repo }}
         ref: ${{ inputs.global_config_version }} 
         token: ${{ inputs.github_token }}
-        path: ./temp_global_config
-    - name: ls 
-      shell: bash
-      working-directory: ./temp_global_config
-      run: |
-        ls -a
-        pwd
-        echo $GITHUB_WORKSPACE
+        path: ${{ inputs.temp_workspace }}
+
     - name: Read global config JSON and set environment variables
       shell: bash
-      working-directory: ./temp_global_config
+      working-directory: ${{ inputs.temp_workspace }}
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})

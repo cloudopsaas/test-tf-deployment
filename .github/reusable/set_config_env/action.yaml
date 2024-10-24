@@ -65,7 +65,7 @@ runs:
       shell: bash
       run: |
         if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
-          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF" >> $GITHUB_ENV
+          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF_NAME" >> $GITHUB_ENV
         elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" >> $GITHUB_ENV
         else

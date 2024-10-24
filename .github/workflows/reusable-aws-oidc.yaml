@@ -31,7 +31,7 @@ jobs:
       - name: Read config and set env
         uses: ./.github/reusable/set_config_env
         with:
-          global_config_version: v1.0.0
+          global_config_version: v1.0.1
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify environment variables

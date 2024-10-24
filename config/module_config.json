@@ -1,17 +1,41 @@
 {
     "env_variables": {
-        "module": "networking",
-        "environment": "prod"
+        "TF_VAR_module": "networking"
     },
-    "accounts": {
-        "app_backend": {
-            "vpc_name": "test-backend",
-            "primary_cidr_block": "10.0.0.0/16"
-        },
-        "operations": {
-            "vpc_name": "test-operations",
-            "primary_cidr_block": "10.1.0.0/16"
+    "dev":{
+        "accounts": {
+            "app_backend": {
+                "vpc_name": "test-backend",
+                "primary_cidr_block": "10.0.0.0/16"
+            },
+            "operations": {
+                "vpc_name": "test-operations",
+                "primary_cidr_block": "10.1.0.0/16"
+            }
+        }
+    },
+    "uat":{
+        "accounts": {
+            "app_backend": {
+                "vpc_name": "test-backend",
+                "primary_cidr_block": "10.0.0.0/16"
+            },
+            "operations": {
+                "vpc_name": "test-operations",
+                "primary_cidr_block": "10.1.0.0/16"
+            }
+        }
+    },
+    "prod":{
+        "accounts": {
+            "app_backend": {
+                "vpc_name": "test-backend",
+                "primary_cidr_block": "10.0.0.0/16"
+            },
+            "operations": {
+                "vpc_name": "test-operations",
+                "primary_cidr_block": "10.1.0.0/16"
+            }
         }
     }
-    
 }

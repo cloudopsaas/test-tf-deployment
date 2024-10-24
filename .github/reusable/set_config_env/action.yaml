@@ -23,7 +23,10 @@ inputs:
     description: "Name of the local folder where we checkout the global config repo"
     required: true
     default: "temp_global_config"
-  
+  cloud_env_variable_name:
+    description: "Name of the env variable where we store the cloud env based on the branch name"
+    required: true
+    default: "TF_VAR_cloud_env"
   
 runs:
   using: "composite"
@@ -49,6 +52,7 @@ runs:
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
           echo "$key=$value" >> $GITHUB_ENV
         done
+
     - name: Read module config JSON and set environment variables
       shell: bash
       run: |
@@ -56,4 +60,14 @@ runs:
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})
           echo "$key=$value" >> $GITHUB_ENV
         done
-    
+
+    - name: Create environment variable based on branch name
+      shell: bash
+      run: |
+        if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF" >> $GITHUB_ENV
+        elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" >> $GITHUB_ENV
+        else
+          echo "No push or PR."
+        fi

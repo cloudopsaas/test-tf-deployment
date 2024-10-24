@@ -7,6 +7,12 @@ inputs:
   global_config_version:
     description: "Version of the global config JSON file, specified as git tag"
     required: true
+  github_token:
+    description: "GITHUB TOKEN for checking out private repo"
+    required: true
+  workdir:
+    description: "Path for checking out private repo"
+    required: true
   global_config_file_path:
     description: "Path to the global module config JSON file"
     required: true
@@ -15,9 +21,7 @@ inputs:
     description: "Path to the local module config JSON file"
     required: true
     default: "config/module_config.json"
-  github_token:
-    description: "GITHUB TOKEN for checking out private repo"
-    required: true
+  
 runs:
   using: "composite"
   steps:
@@ -27,13 +31,16 @@ runs:
         repository: ${{ inputs.global_config_repo }}
         ref: ${{ inputs.global_config_version }} 
         token: ${{ inputs.github_token }}
+        path: ${{ inputs.workdir }}
 
     - name: ls 
       shell: bash
+      working-directory: ${{ inputs.workdir }}
       run: |
         ls -a
     - name: Read global config JSON and set environment variables
       shell: bash
+      working-directory: ${{ inputs.workdir }}
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
@@ -42,6 +49,7 @@ runs:
 
     - name: Read module config JSON and set environment variables
       shell: bash
+      working-directory: ${{ inputs.workdir }}
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.module_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})

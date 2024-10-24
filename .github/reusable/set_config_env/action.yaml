@@ -38,6 +38,8 @@ runs:
       working-directory: ${{ inputs.workdir }}
       run: |
         ls -a
+        pwd
+        echo ${{ inputs.workdir }}
     - name: Read global config JSON and set environment variables
       shell: bash
       working-directory: ${{ inputs.workdir }}

@@ -23,7 +23,7 @@ runs:
       with:
         repository: ${{ inputs.global_config_repo }}
         ref: ${{ inputs.global_config_version }} 
-        token: ${{ secrets.GITHUB_TOKEN }}
+        # token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Read global config JSON and set environment variables
       shell: bash

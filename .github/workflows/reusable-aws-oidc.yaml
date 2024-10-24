@@ -21,7 +21,7 @@ jobs:
           ls -a
           ls ./.github/reusable/
           pwd
-          echo ${{ env.GITHUB_WORKSPACE }}
+          echo $GITHUB_WORKSPACE
       # - uses: aws-actions/configure-aws-credentials@v4
       #   with:
       #       role-to-assume: arn:aws:iam::951100737550:role/GithubOIDC

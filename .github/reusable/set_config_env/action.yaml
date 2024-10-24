@@ -34,7 +34,6 @@ runs:
         ref: ${{ inputs.global_config_version }} 
         token: ${{ inputs.github_token }}
         clean: false
-
     - name: ls 
       shell: bash
       run: |

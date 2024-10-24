@@ -34,7 +34,6 @@ jobs:
           global_config_repo: cloudopsaas/global-config
           global_config_version: v1.0.0
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          workdir: $GITHUB_WORKSPACE
 
       - name: Verify environment variables
         run: |

@@ -29,6 +29,7 @@ runs:
       shell: bash
       run: |
         pwd
+        ls -a
     - name: Checkout the global config repository
       uses: actions/checkout@v4
       with:

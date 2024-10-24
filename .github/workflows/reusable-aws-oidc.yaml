@@ -39,7 +39,7 @@ jobs:
           echo $GITHUB_REF_NAME
           echo "region"
           echo ${{ env.TF_VAR_default_region }}
-          "echo role github"
+          echo "role github"
           echo ${{ env.github_oidc_role }}
           echo "envs"
           echo $GITHUB_ENV

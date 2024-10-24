@@ -18,7 +18,8 @@ jobs:
         uses: actions/checkout@v4
       - name: ls 
         run: |
-          ls
+          ls -a
+          ls ./.github/reusable/
           pwd
       # - uses: aws-actions/configure-aws-credentials@v4
       #   with:

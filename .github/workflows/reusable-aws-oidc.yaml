@@ -49,7 +49,7 @@ jobs:
       - name: Environment Variable Replacer
         uses: ./.github/reusable/env_variable_replacer
         with:
-          filename: ./aws_accounts/operations/tf_backend.tf
+          filename: ./terraform/tf_config.tf
 
       - name: Terraform-SetupWithCloud
         uses: hashicorp/setup-terraform@v3.1.2
@@ -58,9 +58,9 @@ jobs:
 
       - name: Validate
         shell: bash
-        working-directory: ./aws_accounts/operations/
+        working-directory: ./terraform
         run: |
-          cat tf_backend.tf
+          cat tf_config.tf
           # terraform init
 
   test_env:

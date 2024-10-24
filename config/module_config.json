@@ -1,6 +1,7 @@
 {
     "env_variables": {
-        "TF_VAR_module": "networking"
+        "TF_VAR_module": "networking",
+        "TF_VAR_aws_provider_version": "~> 5.0"
     },
     "dev":{
         "accounts": {

@@ -38,7 +38,7 @@ runs:
       working-directory: ${{ inputs.workdir }}
       run: |
         ls -a
-        pwd
+        echo $GITHUB_WORKSPACE
         echo ${{ inputs.workdir }}
     - name: Read global config JSON and set environment variables
       shell: bash

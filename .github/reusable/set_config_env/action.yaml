@@ -27,19 +27,13 @@ runs:
       run: |
         pwd
         ls -a
-    - name: Read module config JSON and set environment variables
-      shell: bash
-      run: |
-        for key in $(jq -r '.env_variables | keys[]' ${{ inputs.module_config_file_path }}); do
-          value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})
-          echo "$key=$value" >> $GITHUB_ENV
-        done
     - name: Checkout the global config repository
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.global_config_repo }}
         ref: ${{ inputs.global_config_version }} 
         token: ${{ inputs.github_token }}
+        clean: false
 
     - name: ls 
       shell: bash
@@ -54,5 +48,11 @@ runs:
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
           echo "$key=$value" >> $GITHUB_ENV
         done
-
+    - name: Read module config JSON and set environment variables
+      shell: bash
+      run: |
+        for key in $(jq -r '.env_variables | keys[]' ${{ inputs.module_config_file_path }}); do
+          value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})
+          echo "$key=$value" >> $GITHUB_ENV
+        done
     

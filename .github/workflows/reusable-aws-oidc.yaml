@@ -35,32 +35,29 @@ jobs:
           else
             echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" >> $GITHUB_ENV
           fi
-          echo "ref name"
-          echo $GITHUB_REF_NAME
-          echo "region"
-          echo ${{ env.TF_VAR_default_region }}
-          echo "role github"
-          echo ${{ env.github_oidc_role }}
-          echo "envs"
-          echo $GITHUB_ENV
-
-      - name: get env
-        shell: bash
-        run: |
-          echo "ref name"
-          echo $GITHUB_REF_NAME
-          echo "region"
-          echo ${{ env.TF_VAR_default_region }}
-          echo "role github"
-          echo ${{ env.github_oidc_role }}
-          echo "envs"
-          echo $GITHUB_ENV
       
-      # - uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     role-to-assume: ${{ env.github_oidc_role }}
-      #     role-session-name: github-pipeline
-      #     aws-region: ${{ env.TF_VAR_default_region }}
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.github_oidc_role }}
+          role-session-name: github-pipeline
+          aws-region: ${{ env.TF_VAR_default_region }}
+
+      - name: Environment Variable Replacer
+        uses: ./.github/reusable/env_variable_replacer
+        with:
+          filename: ./aws_accounts/operations/tf_backend.tf
+
+      - name: Terraform-SetupWithCloud
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: "1.9.4"
+
+      - name: Validate
+        shell: bash
+        working-directory: ./aws_accounts/operations/
+        run: |
+          cat tf_backend.tf
+          # terraform init
 
   test_env:
     runs-on: ubuntu-latest

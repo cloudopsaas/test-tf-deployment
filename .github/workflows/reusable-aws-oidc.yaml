@@ -16,17 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: ls 
-        run: |
-          ls -a
-          ls ./.github/reusable/
-          pwd
-          echo $GITHUB_WORKSPACE
-      # - uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #       role-to-assume: arn:aws:iam::951100737550:role/GithubOIDC
-      #       role-session-name: production-session
-      #       aws-region: eu-central-1
 
       - name: Read config and set env
         uses: ./.github/reusable/set_config_env
@@ -34,15 +23,34 @@ jobs:
           global_config_version: v1.0.1
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify environment variables
+      - name: Select Github OIDC role based on branch name
+        shell: bash
         run: |
+          if [[ $GITHUB_REF_NAME == "dev" ]]; then
+            echo "github_oidc_role=TF_VAR_dev_github_oidc_role_arn" >> $GITHUB_ENV
+          elif [[ $GITHUB_REF_NAME == "uat" ]]; then
+            echo "github_oidc_role=TF_VAR_uat_github_oidc_role_arn" >> $GITHUB_ENV
+          elif [[ $GITHUB_REF_NAME == "prod" ]]; then
+            echo "github_oidc_role=TF_VAR_prod_github_oidc_role_arn" >> $GITHUB_ENV
+          else
+            echo "github_oidc_role=TF_VAR_main_github_oidc_role_arn" >> $GITHUB_ENV
+          fi
           echo $GITHUB_ENV
+          echo ${{ env.TF_VAR_default_region }}
+          echo ${{ env.github_oidc_role }}
+      
+      # - uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ env.github_oidc_role }}
+      #     role-session-name: github-pipeline
+      #     aws-region: ${{ env.TF_VAR_default_region }}
 
   test_env:
     runs-on: ubuntu-latest
     name: Test env
     steps:
       - name: test_env
+        shell: bash
         run: |
           echo "test env job"
           echo $GITHUB_ENV

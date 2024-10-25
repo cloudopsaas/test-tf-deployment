@@ -19,7 +19,8 @@ jobs:
     name: Environment setup
     env:
       VAR_FILE_NAME: env_var_file
-      GLOBAL_CONFIG_VERSION: v1.0.5
+      GLOBAL_CONFIG_REPO: cloudopsaas/global-config
+      GLOBAL_CONFIG_VERSION: "v1.0.5"
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
     steps:
@@ -29,6 +30,7 @@ jobs:
       - name: Read config and set env
         uses: ./.github/reusable_actions/set_config_env
         with:
+          global_config_repo: ${{ env.GLOBAL_CONFIG_REPO }}
           global_config_version: ${{ env.GLOBAL_CONFIG_VERSION }}
           var_file_name: ${{ env.VAR_FILE_NAME }}
           github_token: ${{ secrets.GITHUB_TOKEN }}

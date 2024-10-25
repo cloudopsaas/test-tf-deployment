@@ -4,7 +4,6 @@ inputs:
   global_config_repo:
     description: "Repo containing global config JSON file"
     required: true
-    default: cloudopsaas/global-config
   global_config_version:
     description: "Version of the global config JSON file, specified as git tag"
     required: true

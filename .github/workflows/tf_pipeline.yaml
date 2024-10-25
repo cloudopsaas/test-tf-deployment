@@ -4,7 +4,6 @@ on:
   # Triggers the workflow on push when both conditions (branch & paths) match
   push:
     branches:
-      - main
       - dev
       - uat
       - prod
@@ -20,7 +19,7 @@ jobs:
     env:
       VAR_FILE_NAME: env_var_file
       GLOBAL_CONFIG_REPO: cloudopsaas/global-config
-      GLOBAL_CONFIG_VERSION: v1.0.8
+      GLOBAL_CONFIG_VERSION: v1.0.9
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
     steps:

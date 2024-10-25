@@ -76,7 +76,7 @@ runs:
           elif [[ $GITHUB_REF_NAME == "prod" ]]; then
             echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
           else
-            echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+            echo "No dev, uat or prod branch was used."
           fi
         elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
@@ -87,7 +87,7 @@ runs:
           elif [[ $GITHUB_BASE_REF == "prod" ]]; then
             echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
           else
-            echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+            echo "No dev, uat or prod branch was used."
           fi
         else
           echo "No push or PR."

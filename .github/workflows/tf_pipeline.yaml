@@ -67,16 +67,17 @@ jobs:
   terraform-validate:
     needs: env-setup
     name: Validate Terraform scripts
-    steps:
-      - name: test env
-        shell: bash
-        run: |
-          echo $VAR_FILE_NAME
-      - name: Validate tf
-        uses: ./.github/workflows/reusable_tf_validate.yaml
-        with:
-          working_directory: ./terraform
-          var_file_name: $VAR_FILE_NAME
+    # runs-on: ubuntu-latest
+    # steps:
+    #   - name: test env
+    #     shell: bash
+    #     run: |
+    #       echo $VAR_FILE_NAME
+
+    uses: ./.github/workflows/reusable_tf_validate.yaml
+    with:
+      working_directory: ./terraform
+      var_file_name: ${{ env.VAR_FILE_NAME }}
 
   terraform-lint:
     needs: env-setup
@@ -84,7 +85,7 @@ jobs:
     uses: ./.github/workflows/reusable_tf_lint.yaml
     with:
       working_directory: ./terraform
-      var_file_name: $VAR_FILE_NAME
+      var_file_name: ${{ env.VAR_FILE_NAME }}
 
   terraform-analysis:
     needs: env-setup
@@ -92,7 +93,7 @@ jobs:
     uses: ./.github/workflows/reusable_tf_analysis.yaml
     with:
       working_directory: ./terraform
-      var_file_name: $VAR_FILE_NAME
+      var_file_name: ${{ env.VAR_FILE_NAME }}
 
 
   # terraform-plan:

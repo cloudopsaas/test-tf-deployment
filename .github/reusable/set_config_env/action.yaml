@@ -95,5 +95,5 @@ runs:
           echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" >> $GITHUB_ENV
         else
           echo ${{ env.${{ inputs.github_oidc_main_role }} }}
-          echo "github_oidc_role=${!${{ inputs.github_oidc_main_role }}}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          # echo "github_oidc_role=${!${{ inputs.github_oidc_main_role }}}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         fi

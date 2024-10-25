@@ -3,6 +3,11 @@ variable "cloud_env" {
   description = "Value representing the Landing Zone environment. Will be set by the pipeline as TF_VAR_cloud_env based on the repo branch."
 }
 
+variable "default_region" {
+  type = string
+  description = "Value representing the default AWS region. Will be set by the pipeline as TF_VAR_default_region based on the repo branch."
+}
+
 ########################################################################################################################
 # Variables loaded from JSON file
 ########################################################################################################################

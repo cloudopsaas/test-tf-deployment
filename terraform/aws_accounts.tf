@@ -1,6 +1,6 @@
 provider "aws" {
   alias = "app_backend"
-  region = local.global_config.env_variables.default_region
+  region = var.default_region
   assume_role {
     role_arn = "arn:aws:iam::${local.app_backend_account_id}:role/${local.global_config.naming_prefix}${local.global_config.deployer_role}"
   }
@@ -22,7 +22,7 @@ module "app_backend" {
 
 provider "aws" {
   alias = "operations"
-  region = local.global_config.env_variables.default_region
+  region = var.default_region
   assume_role {
     role_arn = "arn:aws:iam::${local.operations_account_id}:role/${local.global_config.naming_prefix}${local.global_config.deployer_role}"
   }

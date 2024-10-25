@@ -19,7 +19,7 @@ jobs:
     name: Environment setup
     env:
       VAR_FILE_NAME: env_var_file
-      GLOBAL_CONFIG_VERSION: v1.0.4
+      GLOBAL_CONFIG_VERSION: v1.0.5
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
     steps:
@@ -68,13 +68,6 @@ jobs:
   terraform-validate:
     needs: env-setup
     name: Validate Terraform scripts
-    # runs-on: ubuntu-latest
-    # steps:
-    #   - name: test env
-    #     shell: bash
-    #     run: |
-    #       echo $VAR_FILE_NAME
-
     uses: ./.github/workflows/reusable_tf_validate.yaml
     with:
       working_directory: ./terraform

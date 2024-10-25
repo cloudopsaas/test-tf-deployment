@@ -40,7 +40,7 @@ jobs:
         with:
           directory: ${{ inputs.working_directory }}
           quiet: false
-          soft_fail: true
+          soft_fail: ${{ env.TF_VAR_tf_analysis_soft_fail }}
           compact: true
 
   tfsec:
@@ -65,4 +65,4 @@ jobs:
         with:
           working_directory: ${{ inputs.working_directory }}
           # github_token: ${{ secrets.githubToken }}
-          soft_fail: true
+          soft_fail: ${{ TF_VAR_tf_analysis_soft_fail }}

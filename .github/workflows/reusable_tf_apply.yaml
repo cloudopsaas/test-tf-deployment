@@ -1,0 +1,49 @@
+name: reusable/apply
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        description: 'Defines working directory'
+        required: true
+        type: string
+
+      var_file_name:
+        description: 'File where evironment variables are stored'
+        required: true
+        type: string
+        
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    environment: manual-approval
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+
+      - name: Set environment variables from artifacts
+        working-directory: ${{ github.workspace }}
+        run: |
+          cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV
+
+      - name: Download Terraform plan
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.TF_VAR_tf_plan_file_name }}
+
+      - name: Terraform-SetupWithCloud
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VAR_terraform_version }}
+
+      - name: Apply
+        run: |
+          ls -a
+          cat ${{ env.TF_VAR_tf_plan_file_name }}
+          # terraform init -upgrade
+          # terraform apply ${{ env.TF_VAR_tf_plan_file_name }}

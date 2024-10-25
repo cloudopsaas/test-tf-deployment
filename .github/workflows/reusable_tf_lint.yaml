@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
+        shell: bash
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Download artifacts
@@ -31,7 +32,6 @@ jobs:
 
       - name: Set environment variables from artifacts
         working-directory: ${{ github.workspace }}
-        shell: bash
         run: |
           cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV
 

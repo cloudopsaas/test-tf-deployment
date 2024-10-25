@@ -91,10 +91,27 @@ jobs:
       working_directory: ./terraform
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
-  terraform-deploy:
-    needs: [terraform-validate, terraform-lint, terraform-analysis]
-    name: Deploy Terraform scripts
-    uses: ./.github/workflows/reusable_tf_deploy.yaml
+  terraform-plan:
+    needs: [env-setup, terraform-validate, terraform-lint, terraform-analysis]
+    name: Plan Terraform changes
+    uses: ./.github/workflows/reusable_tf_plan.yaml
+    with:
+      working_directory: ./terraform
+      var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
+
+  manual-approval:
+    name: Terraform plan review is required
+    runs-on: ubuntu-latest
+    needs: terraform-plan
+    environment: manual-approval
+    steps:
+      - name: Job awaiting approval
+        run: echo "Terraform plan was approved"
+ 
+  terraform-apply:
+    needs: [env-setup, terraform-plan, manual-approval]
+    name: Apply Terraform plan
+    uses: ./.github/workflows/reusable_tf_apply.yaml
     with:
       working_directory: ./terraform
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}

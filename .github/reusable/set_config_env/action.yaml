@@ -70,7 +70,6 @@ runs:
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.module_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})
-          # echo "$key=$value" >> $GITHUB_ENV
           echo "$key=$value" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         done
 
@@ -78,9 +77,8 @@ runs:
       shell: bash
       run: |
         if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
-          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF_NAME" >> $GITHUB_ENV
+          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF_NAME" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-          # echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" >> $GITHUB_ENV
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         else
           echo "No push or PR."
@@ -96,6 +94,6 @@ runs:
         elif [[ $GITHUB_REF_NAME == "prod" ]]; then
           echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" >> $GITHUB_ENV
         else
-          echo "github_oidc_role=${!${{ inputs.github_oidc_main_role }}}" >> $GITHUB_ENV
-          # echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" >> $GITHUB_ENV
+          echo ${{ env.${{ inputs.github_oidc_main_role }} }}
+          echo "github_oidc_role=${!${{ inputs.github_oidc_main_role }}}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         fi

@@ -31,14 +31,6 @@ inputs:
     description: "Name of the env variable where we store the cloud env based on the branch name"
     required: true
     default: "TF_VAR_cloud_env"
-  github_oidc_dev_role:
-    description: "Name of the IAM role used for dev env"
-    required: true
-    default: "TF_VAR_dev_github_oidc_role_arn"
-  github_oidc_main_role:
-    description: "Name of the IAM role used for dev env"
-    required: true
-    default: "TF_VAR_main_github_oidc_role_arn"
   
 runs:
   using: "composite"

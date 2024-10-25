@@ -54,7 +54,7 @@ runs:
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
-          echo "$key=$value" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }} $GITHUB_ENV
+          echo "$key=$value" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         done
 
     - name: Read module config JSON and set environment variables
@@ -63,7 +63,7 @@ runs:
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.module_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})
           # echo "$key=$value" >> $GITHUB_ENV
-          echo "$key=$value" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }} $GITHUB_ENV
+          echo "$key=$value" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         done
 
     - name: Create environment variable based on branch name
@@ -73,7 +73,7 @@ runs:
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF_NAME" >> $GITHUB_ENV
         elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
           # echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" >> $GITHUB_ENV
-          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }} $GITHUB_ENV
+          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         else
           echo "No push or PR."
         fi

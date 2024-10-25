@@ -30,6 +30,12 @@ jobs:
         run: |
           cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV
 
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.github_oidc_role }}
+          role-session-name: github-pipeline
+          aws-region: ${{ env.TF_VAR_default_region }}
+
       - name: Terraform-SetupWithCloud
         uses: hashicorp/setup-terraform@v3
         with:

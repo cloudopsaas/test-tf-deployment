@@ -36,6 +36,12 @@ jobs:
         with:
           name: ${{ env.TF_VAR_tf_plan_file_name }}
 
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.github_oidc_role }}
+          role-session-name: github-pipeline
+          aws-region: ${{ env.TF_VAR_default_region }}
+
       - name: Terraform-SetupWithCloud
         uses: hashicorp/setup-terraform@v3
         with:

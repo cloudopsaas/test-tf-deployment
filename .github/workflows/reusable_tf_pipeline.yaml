@@ -15,33 +15,20 @@ permissions:
 
 env:
   VAR_FILE_NAME: env_var_file
+  GLOBAL_CONFIG_VERSION: v1.0.4
 
 jobs:
   env-setup:
     runs-on: ubuntu-latest
     name: Environment setup
-    # outputs:
-    #   job1_envs: ${{ steps.set-output.outputs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # - name: setup
-      #   uses: actions/checkout@v4
-
-      # - name: terraform plan
-      #   uses: actions/checkout@v4
-
-      # - name: terraform analysis
-      #   uses: actions/checkout@v4
-
-      # - name: terraform apply
-      #   uses: actions/checkout@v4
-
       - name: Read config and set env
         uses: ./.github/reusable/set_config_env
         with:
-          global_config_version: v1.0.2
+          global_config_version: $GLOBAL_CONFIG_VERSION
           var_file_name: $VAR_FILE_NAME
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -59,11 +46,7 @@ jobs:
 
     
 
-      # - uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     role-to-assume: ${{ env.github_oidc_role }}
-      #     role-session-name: github-pipeline
-      #     aws-region: ${{ env.TF_VAR_default_region }}
+     
 
       # - name: Terraform-SetupWithCloud
       #   uses: hashicorp/setup-terraform@v3.1.2
@@ -84,32 +67,69 @@ jobs:
 
   terraform-validate:
     needs: env-setup
-    runs-on: ubuntu-latest
     name: Validate Terraform scripts
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: artifact
+    uses: ./.github/reusabl/tf_validate.yaml
+    with:
+      working_directory: ./terraform
+      var_file_name: $VAR_FILE_NAME
 
-      - name: Set environment variables from artifacts
-        shell: bash
-        run: |
-          # source $VAR_FILE_NAME
-          cat $VAR_FILE_NAME | tee -a $GITHUB_ENV
+  terraform-lint:
+    needs: env-setup
+    name: Lint Terraform scripts
+    uses: ./.github/reusabl/tf_lint.yaml
+    with:
+      working_directory: ./terraform
+      var_file_name: $VAR_FILE_NAME
 
-      - name: echo env
-        shell: bash
-        run: |
-          echo $GITHUB_ENV
+  terraform-analysis:
+    needs: env-setup
+    name: Perform security checks on Terraform scripts
+    uses: ./.github/reusabl/tf_analysis.yaml
+    with:
+      working_directory: ./terraform
+      var_file_name: $VAR_FILE_NAME
 
-  # terraform-lint:
-
-  # terraform-analysis:
 
   # terraform-plan:
+  #   needs: []
+  #   runs-on: ubuntu-latest
+  #   name: Plan Terraform scripts
+  #   steps:
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: artifact
+
+  #     - name: Set environment variables from artifacts
+  #       shell: bash
+  #       run: |
+  #         cat $VAR_FILE_NAME | tee -a $GITHUB_ENV
+
+      # - uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ env.github_oidc_role }}
+      #     role-session-name: github-pipeline
+      #     aws-region: ${{ env.TF_VAR_default_region }}
+
+      # - name: Terraform-SetupWithCloud
+      #   uses: hashicorp/setup-terraform@v3.1.2
+      #   with:
+      #     terraform_version: "1.9.4"
 
   # terraform-apply:
+  #   needs: terraform-plan
+  #   runs-on: ubuntu-latest
+  #   name: Apply Terraform scripts
+  #   steps:
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: artifact
+
+  #     - name: Set environment variables from artifacts
+  #       shell: bash
+  #       run: |
+  #         cat $VAR_FILE_NAME | tee -a $GITHUB_ENV
 
 
 

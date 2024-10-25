@@ -1,41 +1,48 @@
 name: reusable/lint
 on:
   workflow_call:
-    secrets:
-      githubToken:
-        description: 'GitHub Token value'
-        required: true
+    # secrets:
+    #   githubToken:
+    #     description: 'GitHub Token value'
+    #     required: true
 
     inputs:
-      tflintVersion:
-        description: 'Defines TFLint version to use'
+      working_directory:
+        description: 'Defines working directory'
         required: true
         type: string
 
-      moduleRootDirectory:
-        description: 'Defines root module directory'
-        required: true
-        type: string
+      var_file_name:
+          description: 'File where evironment variables are stored'
+          required: true
+          type: string
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ inputs.moduleRootDirectory }}
+        working-directory: ${{ inputs.working_directory }}
     steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+
+      - name: Set environment variables from artifacts
+        shell: bash
+        run: |
+          cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV
+
       - name: Install TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
-          tflint_version: ${{ inputs.tflintVersion }}
-          github_token: ${{ secrets.githubToken }}
-
-      - name: Checkout
-        uses: actions/checkout@v4
+          tflint_version: ${{ env.TF_VAR_tf_lint_version }}
+          # github_token: ${{ secrets.githubToken }}
 
       - name: Lint
-        env:
-          GITHUB_TOKEN: ${{ secrets.githubToken }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.githubToken }}
         run: |
-          tflint -c ${{ github.workspace }}/.tflint.hcl --init && \
-          tflint -c ${{ github.workspace }}/.tflint.hcl
+          tflint -c tflint.hcl --init && \
+          tflint -c tflint.hcl

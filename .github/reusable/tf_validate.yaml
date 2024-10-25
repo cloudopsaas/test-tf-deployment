@@ -1,23 +1,14 @@
 name: reusable/validate
 on:
   workflow_call:
-    secrets:
-      appId:
-        description: 'GitHub Application ID'
-        required: false
-
-      appPrivateKey:
-        description: 'GitHub Application private key'
-        required: false
-
     inputs:
-      terraformVersion:
-        description: 'Defines terraform version to use'
+      working_directory:
+        description: 'Defines working directory'
         required: true
         type: string
 
-      moduleRootDirectory:
-        description: 'Defines root module directory'
+      var_file_name:
+        description: 'File where evironment variables are stored'
         required: true
         type: string
         
@@ -26,35 +17,22 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ inputs.moduleRootDirectory }}
+        working-directory: ${{ inputs.working_directory }}
     steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+
+      - name: Set environment variables from artifacts
+        shell: bash
+        run: |
+          cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV
+
       - name: Terraform-SetupWithCloud
         uses: hashicorp/setup-terraform@v3.1.2
         with:
-          terraform_version: ${{ inputs.terraformVersion }}
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # - name: Generate token
-      #   env:
-      #     APP_ID: ${{ secrets.appId }}
-      #     PRIVATE_KEY: ${{ secrets.appPrivateKey }}
-      #   if: ${{ env.APP_ID != null && env.PRIVATE_KEY != null }}
-      #   id: generate_token
-      #   uses: tibdex/github-app-token@v2
-      #   with:
-      #     app_id: ${{ secrets.appId }}
-      #     private_key: ${{ secrets.appPrivateKey }}
-    
-      # - name: authenticate to git with app token
-      #   env:
-      #     APP_ID: ${{ secrets.appId }}
-      #     PRIVATE_KEY: ${{ secrets.appPrivateKey }}
-      #   if: ${{ env.APP_ID != null && env.PRIVATE_KEY != null }}
-      #   run: |
-      #     echo ${{ steps.generate_token.outputs.token }} | gh auth login --with-token
-      #     gh auth setup-git
+          terraform_version: ${{ env.TF_VAR_terraform_version }}
 
       - name: Format
         run: |

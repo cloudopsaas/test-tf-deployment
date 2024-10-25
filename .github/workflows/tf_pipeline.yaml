@@ -70,7 +70,7 @@ jobs:
     uses: ./.github/workflows/reusable_tf_validate.yaml
     with:
       working_directory: ./terraform
-      var_file_name: ${{ env.VAR_FILE_NAME }}
+      var_file_name: $VAR_FILE_NAME
 
   terraform-lint:
     needs: env-setup

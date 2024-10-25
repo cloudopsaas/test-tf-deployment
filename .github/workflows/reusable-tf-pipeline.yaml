@@ -95,7 +95,11 @@ jobs:
       - name: Set environment variables from artifacts
         shell: bash
         run: |
-          cat $VAR_FILE_NAME >> $GITHUB_ENV
+          source $VAR_FILE_NAME
+
+      - name: echo env
+        shell: bash
+        run: |
           echo $GITHUB_ENV
 
   # terraform-lint:

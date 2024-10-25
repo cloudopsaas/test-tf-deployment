@@ -91,16 +91,20 @@ jobs:
       working_directory: ./terraform
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
+  terraform-deploy:
+    needs: [terraform-validate, terraform-lint, terraform-analysis]
+    name: Deploy Terraform scripts
+    uses: ./.github/workflows/reusable_tf_deploy.yaml
+    with:
+      working_directory: ./terraform
+      var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
-  # terraform-plan:
-  #   needs: []
-  #   runs-on: ubuntu-latest
-  #   name: Plan Terraform scripts
-  #   steps:
-  #     - name: Download artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: artifact
+
+    # steps:
+    #   - name: Download artifacts
+    #     uses: actions/download-artifact@v4
+    #     with:
+    #       name: artifact
 
   #     - name: Set environment variables from artifacts
   #       shell: bash

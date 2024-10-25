@@ -54,8 +54,7 @@ runs:
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
-          echo "$key=$value" >> $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
-          echo "$key=$value" >> $GITHUB_ENV
+          echo "$key=$value" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         done
 
     - name: Read module config JSON and set environment variables

@@ -28,7 +28,7 @@ jobs:
       - name: Read config and set env
         uses: ./.github/reusable_actions/set_config_env
         with:
-          global_config_version: $GLOBAL_CONFIG_VERSION
+          global_config_version: ${{ env.GLOBAL_CONFIG_VERSION }}
           var_file_name: $VAR_FILE_NAME
           github_token: ${{ secrets.GITHUB_TOKEN }}
 

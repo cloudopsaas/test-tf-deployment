@@ -1,5 +1,5 @@
 name: "Set Environment Variables from config files"
-description: "A reusable action to set environment variables from a JSON file"
+description: "A reusable action to set environment variables from a JSON file and write them to a file"
 inputs:
   global_config_repo:
     description: "Repo containing global config JSON file"
@@ -11,6 +11,10 @@ inputs:
   github_token:
     description: "GITHUB TOKEN for checking out private repo"
     required: true
+  var_file_name:
+    description: "File where we write evironment variables"
+    required: true
+    default: env_var_file
   global_config_file_path:
     description: "Path to the global module config JSON file"
     required: true
@@ -50,7 +54,7 @@ runs:
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
-          echo "$key=$value" >> $GITHUB_ENV
+          echo "$key=$value" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }} >> $GITHUB_ENV
         done
 
     - name: Read module config JSON and set environment variables
@@ -58,7 +62,8 @@ runs:
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.module_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.module_config_file_path }})
-          echo "$key=$value" >> $GITHUB_ENV
+          # echo "$key=$value" >> $GITHUB_ENV
+          echo "$key=$value" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }} >> $GITHUB_ENV
         done
 
     - name: Create environment variable based on branch name
@@ -67,7 +72,8 @@ runs:
         if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF_NAME" >> $GITHUB_ENV
         elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" >> $GITHUB_ENV
+          # echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" >> $GITHUB_ENV
+          echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }} >> $GITHUB_ENV
         else
           echo "No push or PR."
         fi

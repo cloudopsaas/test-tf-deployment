@@ -19,7 +19,7 @@ jobs:
     name: Environment setup
     env:
       VAR_FILE_NAME: env_var_file
-      GLOBAL_CONFIG_VERSION: v1.0.6
+      GLOBAL_CONFIG_VERSION: v1.0.5
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
     steps:

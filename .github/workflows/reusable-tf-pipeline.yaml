@@ -17,6 +17,8 @@ jobs:
   terraform-deployment:
     runs-on: ubuntu-latest
     name: Assume Role
+    outputs:
+      job1_envs: ${{ steps.set-output.outputs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -88,7 +90,7 @@ jobs:
       - name: echo previous step outputs
         shell: bash
         run: |
-          echo "${{ steps.terraform-deployment.outputs }}"
+          echo "${{ needs.terraform-deployment.outputs }}"
 #   validate:
 #         needs: detect
 #         if: ${{ needs.detect.outputs.directories != '{}' && github.event.action != 'closed' }}

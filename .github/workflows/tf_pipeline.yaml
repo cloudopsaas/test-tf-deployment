@@ -29,7 +29,7 @@ jobs:
         uses: ./.github/reusable_actions/set_config_env
         with:
           global_config_version: ${{ env.GLOBAL_CONFIG_VERSION }}
-          var_file_name: $VAR_FILE_NAME
+          var_file_name: ${{ env.VAR_FILE_NAME }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Environment Variable Replacer
@@ -70,7 +70,7 @@ jobs:
     uses: ./.github/workflows/reusable_tf_validate.yaml
     with:
       working_directory: ./terraform
-      var_file_name: $VAR_FILE_NAME
+      var_file_name: ${{ env.VAR_FILE_NAME }}
 
   terraform-lint:
     needs: env-setup
@@ -78,7 +78,7 @@ jobs:
     uses: ./.github/workflows/reusable_tf_lint.yaml
     with:
       working_directory: ./terraform
-      var_file_name: $VAR_FILE_NAME
+      var_file_name: ${{ env.VAR_FILE_NAME }}
 
   terraform-analysis:
     needs: env-setup
@@ -86,7 +86,7 @@ jobs:
     uses: ./.github/workflows/reusable_tf_analysis.yaml
     with:
       working_directory: ./terraform
-      var_file_name: $VAR_FILE_NAME
+      var_file_name: ${{ env.VAR_FILE_NAME }}
 
 
   # terraform-plan:
@@ -102,7 +102,7 @@ jobs:
   #     - name: Set environment variables from artifacts
   #       shell: bash
   #       run: |
-  #         cat $VAR_FILE_NAME | tee -a $GITHUB_ENV
+  #         cat ${{ env.VAR_FILE_NAME }} | tee -a $GITHUB_ENV
 
       # - uses: aws-actions/configure-aws-credentials@v4
       #   with:
@@ -128,7 +128,7 @@ jobs:
   #     - name: Set environment variables from artifacts
   #       shell: bash
   #       run: |
-  #         cat $VAR_FILE_NAME | tee -a $GITHUB_ENV
+  #         cat ${{ env.VAR_FILE_NAME }} | tee -a $GITHUB_ENV
 
 
 

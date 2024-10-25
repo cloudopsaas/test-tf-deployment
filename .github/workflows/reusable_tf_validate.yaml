@@ -29,8 +29,12 @@ jobs:
         run: |
           cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV
 
+      - name: echo
+        run: |
+          echo ${{ env.TF_VAR_terraform_version }}
+
       - name: Terraform-SetupWithCloud
-        uses: hashicorp/setup-terraform@v3.1.2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VAR_terraform_version }}
 

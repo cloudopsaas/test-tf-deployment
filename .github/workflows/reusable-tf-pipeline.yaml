@@ -39,79 +39,80 @@ jobs:
         uses: ./.github/reusable/set_config_env
         with:
           global_config_version: v1.0.2
+          var_file_name: env_var_file
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: ls
+      - name: Validate
         shell: bash
         run: |
           ls -a 
           cat env_var_file
-          echo "read vars"
+          echo "read envs"
           echo $GITHUB_ENV
 
-  #     - name: Select Github OIDC role based on branch name
-  #       shell: bash
-  #       run: |
-  #         if [[ "${{ env.TF_VAR_cloud_env }}" == "dev" ]]; then
-  #           echo "github_oidc_role=${{ env.TF_VAR_dev_github_oidc_role_arn }}" >> $GITHUB_ENV
-  #         elif [[ "${{ env.TF_VAR_cloud_env }}" == "uat" ]]; then
-  #           echo "github_oidc_role=${{ env.TF_VAR_uat_github_oidc_role_arn }}" >> $GITHUB_ENV
-  #         elif [[ "${{ env.TF_VAR_cloud_env }}" == "prod" ]]; then
-  #           echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" >> $GITHUB_ENV
-  #         else
-  #           echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" >> $GITHUB_ENV
-  #         fi
+      # - name: Select Github OIDC role based on branch name
+      #   shell: bash
+      #   run: |
+      #     if [[ "${{ env.TF_VAR_cloud_env }}" == "dev" ]]; then
+      #       echo "github_oidc_role=${{ env.TF_VAR_dev_github_oidc_role_arn }}" >> $GITHUB_ENV
+      #     elif [[ "${{ env.TF_VAR_cloud_env }}" == "uat" ]]; then
+      #       echo "github_oidc_role=${{ env.TF_VAR_uat_github_oidc_role_arn }}" >> $GITHUB_ENV
+      #     elif [[ "${{ env.TF_VAR_cloud_env }}" == "prod" ]]; then
+      #       echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" >> $GITHUB_ENV
+      #     else
+      #       echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" >> $GITHUB_ENV
+      #     fi
       
-  #     - uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         role-to-assume: ${{ env.github_oidc_role }}
-  #         role-session-name: github-pipeline
-  #         aws-region: ${{ env.TF_VAR_default_region }}
-
-  #     - name: Environment Variable Replacer
-  #       uses: ./.github/reusable/env_variable_replacer
-  #       with:
-  #         filename: ./terraform/tf_config.tf
-
-  #     - name: Terraform-SetupWithCloud
-  #       uses: hashicorp/setup-terraform@v3.1.2
-  #       with:
-  #         terraform_version: "1.9.4"
-
-  #     - name: Validate
-  #       shell: bash
-  #       working-directory: ./terraform
-  #       run: |
-  #         cat tf_config.tf
-  #         # terraform init
-      
-  #     - name: set-output
-  #       shell: bash
-  #       run: |
-  #         echo $GITHUB_ENV >> $GITHUB_OUTPUT
-
-  # test-env:
-  #   needs: terraform-deployment
-  #   runs-on: ubuntu-latest
-  #   name: test github env
-  #   steps:
-  #     - name: echo previous step outputs
-  #       shell: bash
-  #       run: |
-  #         echo "${{ needs.terraform-deployment.outputs }}"
-#   validate:
-#         needs: detect
-#         if: ${{ needs.detect.outputs.directories != '{}' && github.event.action != 'closed' }}
-#         strategy:
-#           matrix: "${{ fromJson(needs.detect.outputs.directories) }}"
-#           fail-fast: false
-#         uses: ./.github/workflows/reusable-validate.yaml
+#       - uses: aws-actions/configure-aws-credentials@v4
 #         with:
-#           terraformVersion: ${{ needs.detect.outputs.tfVersion }}
-#           moduleRootDirectory: ${{ matrix.directory }}
-#         secrets:
-#           appId: ${{ secrets.appId }}
-#           appPrivateKey: ${{ secrets.appPrivateKey }}
+#           role-to-assume: ${{ env.github_oidc_role }}
+#           role-session-name: github-pipeline
+#           aws-region: ${{ env.TF_VAR_default_region }}
+
+#       - name: Environment Variable Replacer
+#         uses: ./.github/reusable/env_variable_replacer
+#         with:
+#           filename: ./terraform/tf_config.tf
+
+#       - name: Terraform-SetupWithCloud
+#         uses: hashicorp/setup-terraform@v3.1.2
+#         with:
+#           terraform_version: "1.9.4"
+
+#       - name: Validate
+#         shell: bash
+#         working-directory: ./terraform
+#         run: |
+#           cat tf_config.tf
+#           # terraform init
+      
+#       - name: set-output
+#         shell: bash
+#         run: |
+#           echo $GITHUB_ENV >> $GITHUB_OUTPUT
+
+#   test-env:
+#     needs: terraform-deployment
+#     runs-on: ubuntu-latest
+#     name: test github env
+#     steps:
+#       - name: echo previous step outputs
+#         shell: bash
+#         run: |
+#           echo "${{ needs.terraform-deployment.outputs }}"
+#   validate:
+# #         needs: detect
+# #         if: ${{ needs.detect.outputs.directories != '{}' && github.event.action != 'closed' }}
+# #         strategy:
+# #           matrix: "${{ fromJson(needs.detect.outputs.directories) }}"
+# #           fail-fast: false
+# #         uses: ./.github/workflows/reusable-validate.yaml
+# #         with:
+# #           terraformVersion: ${{ needs.detect.outputs.tfVersion }}
+# #           moduleRootDirectory: ${{ matrix.directory }}
+# #         secrets:
+# #           appId: ${{ secrets.appId }}
+# #           appPrivateKey: ${{ secrets.appPrivateKey }}
   
 
 

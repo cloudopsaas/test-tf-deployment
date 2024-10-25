@@ -31,6 +31,14 @@ inputs:
     description: "Name of the env variable where we store the cloud env based on the branch name"
     required: true
     default: "TF_VAR_cloud_env"
+  github_oidc_dev_role:
+    description: "Name of the IAM role used for dev env"
+    required: true
+    default: "TF_VAR_dev_github_oidc_role_arn"
+  github_oidc_main_role:
+    description: "Name of the IAM role used for dev env"
+    required: true
+    default: "TF_VAR_main_github_oidc_role_arn"
   
 runs:
   using: "composite"
@@ -54,7 +62,7 @@ runs:
       run: |
         for key in $(jq -r '.env_variables | keys[]' ${{ inputs.global_config_file_path }}); do
           value=$(jq -r ".env_variables[\"$key\"]" ${{ inputs.global_config_file_path }})
-          echo "$key=$value" | tee -a $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          echo "$key=$value" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         done
 
     - name: Read module config JSON and set environment variables
@@ -76,4 +84,18 @@ runs:
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         else
           echo "No push or PR."
+        fi
+
+    - name: Select Github OIDC role based on branch name
+      shell: bash
+      run: |
+        if [[ $GITHUB_REF_NAME == "dev" ]]; then
+          echo "github_oidc_role=${!${{ inputs.github_oidc_dev_role }}}" >> $GITHUB_ENV
+        elif [[ $GITHUB_REF_NAME == "uat" ]]; then
+          echo "github_oidc_role=${{ env.TF_VAR_uat_github_oidc_role_arn }}" >> $GITHUB_ENV
+        elif [[ $GITHUB_REF_NAME == "prod" ]]; then
+          echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" >> $GITHUB_ENV
+        else
+          echo "github_oidc_role=${!${{ inputs.github_oidc_main_role }}}" >> $GITHUB_ENV
+          # echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" >> $GITHUB_ENV
         fi

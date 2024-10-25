@@ -90,7 +90,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          - name: artifact
+          name: artifact
 
       - name: Set environment variables from artifacts
         shell: bash

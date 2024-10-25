@@ -95,7 +95,8 @@ jobs:
       - name: Set environment variables from artifacts
         shell: bash
         run: |
-          source $VAR_FILE_NAME
+          # source $VAR_FILE_NAME
+          cat $VAR_FILE_NAME | tee -a $GITHUB_ENV
 
       - name: echo env
         shell: bash

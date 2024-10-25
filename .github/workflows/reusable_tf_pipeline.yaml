@@ -68,7 +68,7 @@ jobs:
   terraform-validate:
     needs: env-setup
     name: Validate Terraform scripts
-    uses: ./.github/reusabl/tf_validate.yaml
+    uses: ./.github/reusable/tf_validate.yaml
     with:
       working_directory: ./terraform
       var_file_name: $VAR_FILE_NAME
@@ -76,7 +76,7 @@ jobs:
   terraform-lint:
     needs: env-setup
     name: Lint Terraform scripts
-    uses: ./.github/reusabl/tf_lint.yaml
+    uses: ./.github/reusable/tf_lint.yaml
     with:
       working_directory: ./terraform
       var_file_name: $VAR_FILE_NAME
@@ -84,7 +84,7 @@ jobs:
   terraform-analysis:
     needs: env-setup
     name: Perform security checks on Terraform scripts
-    uses: ./.github/reusabl/tf_analysis.yaml
+    uses: ./.github/reusable/tf_analysis.yaml
     with:
       working_directory: ./terraform
       var_file_name: $VAR_FILE_NAME

@@ -34,11 +34,11 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VAR_terraform_version }}
 
-      - name: Format
-        run: |
-          terraform fmt -write=false -diff -check
-          
       - name: Validate
         run: |
           terraform init --backend=false
           terraform validate
+
+      - name: Format
+        run: |
+          terraform fmt -write=false -diff --recursive

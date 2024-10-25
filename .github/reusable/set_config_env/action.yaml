@@ -93,3 +93,8 @@ runs:
         else
           echo "No push or PR."
         fi
+
+    - name: Clean up temp workspace
+      shell: bash
+      run: |
+        rm -r ${{ inputs.temp_workspace }}

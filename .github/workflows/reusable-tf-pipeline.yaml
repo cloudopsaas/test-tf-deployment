@@ -96,6 +96,7 @@ jobs:
         shell: bash
         run: |
           ls -a
+          cat $VAR_FILE_NAME
           source $VAR_FILE_NAME
           echo $GITHUB_ENV
 

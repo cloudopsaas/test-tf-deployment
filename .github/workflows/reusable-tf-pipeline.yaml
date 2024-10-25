@@ -46,6 +46,7 @@ jobs:
         run: |
           ls -a 
           cat env_var_file
+          echo "read vars"
           echo $GITHUB_ENV
 
   #     - name: Select Github OIDC role based on branch name
@@ -119,7 +120,7 @@ jobs:
 
 
 
-  
+
 #   validate:
 #         needs: detect
 #         if: ${{ needs.detect.outputs.directories != '{}' && github.event.action != 'closed' }}

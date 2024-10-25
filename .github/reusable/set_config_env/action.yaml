@@ -73,26 +73,31 @@ runs:
           echo "$key=$value" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         done
 
-    - name: Create environment variable based on branch name
+    - name: Create cloud env variable and select OIDC IAM role to use based on branch name
       shell: bash
       run: |
         if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_REF_NAME" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          if [[ $GITHUB_REF_NAME == "dev" ]]; then
+            echo "github_oidc_role=${{ env.TF_VAR_dev_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          elif [[ $GITHUB_REF_NAME == "uat" ]]; then
+            echo "github_oidc_role=${{ env.TF_VAR_uat_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          elif [[ $GITHUB_REF_NAME == "prod" ]]; then
+            echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          else
+            echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          fi
         elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
           echo "${{ inputs.cloud_env_variable_name }}=$GITHUB_BASE_REF" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          if [[ $GITHUB_BASE_REF == "dev" ]]; then
+            echo "github_oidc_role=${{ env.TF_VAR_dev_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          elif [[ $GITHUB_BASE_REF == "uat" ]]; then
+            echo "github_oidc_role=${{ env.TF_VAR_uat_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          elif [[ $GITHUB_BASE_REF == "prod" ]]; then
+            echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          else
+            echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
+          fi
         else
           echo "No push or PR."
-        fi
-
-    - name: Select Github OIDC role based on branch name
-      shell: bash
-      run: |
-        if [[ $GITHUB_REF_NAME == "dev" ]]; then
-          echo "github_oidc_role=${!${{ inputs.github_oidc_dev_role }}}" >> $GITHUB_ENV
-        elif [[ $GITHUB_REF_NAME == "uat" ]]; then
-          echo "github_oidc_role=${{ env.TF_VAR_uat_github_oidc_role_arn }}" >> $GITHUB_ENV
-        elif [[ $GITHUB_REF_NAME == "prod" ]]; then
-          echo "github_oidc_role=${{ env.TF_VAR_prod_github_oidc_role_arn }}" >> $GITHUB_ENV
-        else
-          echo "github_oidc_role=${{ env.TF_VAR_main_github_oidc_role_arn }}" | tee -a $GITHUB_ENV $GITHUB_WORKSPACE/${{ inputs.var_file_name }}
         fi

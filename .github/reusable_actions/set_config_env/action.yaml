@@ -39,11 +39,11 @@ runs:
       run: |
         mkdir ${{ inputs.temp_workspace }}
 
-    - name: echo
-      shell: bash
-      run: |
-        echo ${{ inputs.global_config_repo }}
-        echo ${{ inputs.global_config_version }} 
+    # - name: echo
+    #   shell: bash
+    #   run: |
+    #     echo ${{ inputs.global_config_repo }}
+    #     echo ${{ inputs.global_config_version }} 
 
     - name: Checkout the global config repository
       uses: actions/checkout@v4

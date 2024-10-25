@@ -20,7 +20,8 @@ jobs:
     env:
       VAR_FILE_NAME: env_var_file
       GLOBAL_CONFIG_REPO: cloudopsaas/global-config
-      GLOBAL_CONFIG_VERSION: v1.0.6
+      # GLOBAL_CONFIG_VERSION: v1.0.6
+      GLOBAL_CONFIG_VERSION: main
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
     steps:

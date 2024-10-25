@@ -55,6 +55,7 @@ jobs:
           name: artifact
 
       - name: Set environment variables from artifacts
+        working-directory: ${{ github.workspace }}
         shell: bash
         run: |
           cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV

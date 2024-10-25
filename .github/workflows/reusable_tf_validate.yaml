@@ -15,9 +15,9 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: ${{ inputs.working_directory }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -30,13 +30,13 @@ jobs:
         run: |
           cat ${{ inputs.var_file_name }} | tee -a $GITHUB_ENV
 
-      - name: echo
-        working-directory: ${{ github.workspace }}
-        run: |
-          # ls -a
-          echo ${{ inputs.var_file_name }}
-          echo ${{ env.TF_VAR_terraform_version }}
-          echo $GITHUB_ENV
+      # - name: echo
+      #   working-directory: ${{ github.workspace }}
+      #   run: |
+      #     # ls -a
+      #     echo ${{ inputs.var_file_name }}
+      #     echo ${{ env.TF_VAR_terraform_version }}
+      #     echo $GITHUB_ENV
 
       - name: Terraform-SetupWithCloud
         uses: hashicorp/setup-terraform@v3

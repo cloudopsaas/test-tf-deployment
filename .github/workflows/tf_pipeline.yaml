@@ -20,6 +20,9 @@ jobs:
       VAR_FILE_NAME: env_var_file
       GLOBAL_CONFIG_REPO: cloudopsaas/global-config
       GLOBAL_CONFIG_VERSION: v1.0.10
+      GLOBAL_CONFIG_FILE_PATH: lz/global_config.json
+      MODULE_CONFIG_FILE_PATH: config/module_config.json
+      CLOUD_ENV_VARIABLE_NAME: TF_VAR_cloud_env
       TF_ROOT_DIRECTORY: ./terraform
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
@@ -33,14 +36,19 @@ jobs:
         with:
           global_config_repo: ${{ env.GLOBAL_CONFIG_REPO }}
           global_config_version: ${{ env.GLOBAL_CONFIG_VERSION }}
+          global_config_file_path: ${{ env.GLOBAL_CONFIG_FILE_PATH }}
+          module_config_file_path: ${{ env.MODULE_CONFIG_FILE_PATH }}
+          cloud_env_variable_name: ${{ env.CLOUD_ENV_VARIABLE_NAME }}
           var_file_name: ${{ env.VAR_FILE_NAME }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Environment Variable Replacer
         uses: ./.github/reusable_actions/env_variable_replacer
         with:
-          filename: ${{ env.TF_ROOT_DIRECTORY }}/tf_config.tf
-
+          files: |
+            ${{ env.TF_ROOT_DIRECTORY }}/tf_config.tf
+            ${{ env.TF_ROOT_DIRECTORY }}/input.tf
+            
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

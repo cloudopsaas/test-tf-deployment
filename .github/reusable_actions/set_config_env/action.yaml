@@ -7,29 +7,25 @@ inputs:
   global_config_version:
     description: "Version of the global config JSON file, specified as git tag"
     required: true
+  global_config_file_path:
+    description: "Path to the global module config JSON file"
+    required: true
   github_token:
     description: "GITHUB TOKEN for checking out private repo"
+    required: true
+  module_config_file_path:
+    description: "Path to the local module config JSON file"
+    required: true
+  cloud_env_variable_name:
+    description: "Name of the env variable where we store the cloud env based on the branch name"
     required: true
   var_file_name:
     description: "File where we write evironment variables"
     required: true
-    default: env_var_file
-  global_config_file_path:
-    description: "Path to the global module config JSON file"
-    required: true
-    default: "lz/global_config.json"
-  module_config_file_path:
-    description: "Path to the local module config JSON file"
-    required: true
-    default: "config/module_config.json"
   temp_workspace:
     description: "Name of the local folder where we checkout the global config repo"
     required: true
     default: "temp_global_config"
-  cloud_env_variable_name:
-    description: "Name of the env variable where we store the cloud env based on the branch name"
-    required: true
-    default: "TF_VAR_cloud_env"
   
 runs:
   using: "composite"

@@ -49,7 +49,5 @@ jobs:
 
       - name: Apply
         run: |
-          ls -a
-          cat ${{ env.TF_VAR_tf_plan_file_name }}
-          # terraform init -upgrade
-          # terraform apply ${{ env.TF_VAR_tf_plan_file_name }}
+          terraform init -upgrade
+          terraform apply ${{ env.TF_VAR_tf_plan_file_name }}

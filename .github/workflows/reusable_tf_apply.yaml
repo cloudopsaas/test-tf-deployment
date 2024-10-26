@@ -34,7 +34,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.TF_VAR_tf_plan_file_name }}
-          path: ${{ inputs.working_directory }}/${{ env.TF_VAR_tf_plan_file_name }}
+          path: ${{ inputs.working_directory }}
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:

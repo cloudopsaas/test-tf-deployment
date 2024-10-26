@@ -15,7 +15,6 @@ on:
 jobs:
   apply:
     runs-on: ubuntu-latest
-    environment: manual-approval
     defaults:
       run:
         shell: bash

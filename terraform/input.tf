@@ -12,8 +12,14 @@ variable "default_region" {
 # Variables loaded from JSON file
 ########################################################################################################################
 
+data "github_repository_file" "global_config" {
+  repository          = "cloudopsaas/global-config"
+  branch              = "v1.0.10"
+  file                = "lz/global_config.json"
+}
+
 locals {
-  global_config = jsondecode(file("${path.root}/../config/global_config.json"))
+  global_config = jsondecode(data.github_repository_file.global_config.content)
   module_config = jsondecode(file("${path.root}/../config/module_config.json"))
   app_backend_account_id = local.global_config.org_structure[var.cloud_env].accounts["app_backend"].id
   operations_account_id = local.global_config.org_structure[var.cloud_env].accounts["operations"].id

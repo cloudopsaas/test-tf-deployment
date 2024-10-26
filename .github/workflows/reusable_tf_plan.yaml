@@ -13,7 +13,7 @@ on:
         type: string
         
 jobs:
-  validate:
+  plan:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -51,6 +51,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TF_VAR_tf_plan_file_name }}
-          path: ${{ env.TF_VAR_tf_plan_file_name }}
+          path: ${{ inputs.working_directory }}/${{ env.TF_VAR_tf_plan_file_name }}
           if-no-files-found: error
           retention-days: 1

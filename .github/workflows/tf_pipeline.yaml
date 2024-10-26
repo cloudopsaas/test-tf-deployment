@@ -20,8 +20,10 @@ jobs:
       VAR_FILE_NAME: env_var_file
       GLOBAL_CONFIG_REPO: cloudopsaas/global-config
       GLOBAL_CONFIG_VERSION: v1.0.10
+      TF_ROOT_DIRECTORY: ./terraform
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
+      tf_root_directory: ${{ env.TF_ROOT_DIRECTORY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,7 +39,7 @@ jobs:
       - name: Environment Variable Replacer
         uses: ./.github/reusable_actions/env_variable_replacer
         with:
-          filename: ./terraform/tf_config.tf
+          filename: ${{ env.TF_ROOT_DIRECTORY }}/tf_config.tf
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -50,7 +52,7 @@ jobs:
     name: Terraform Validate
     uses: ./.github/workflows/reusable_tf_validate.yaml
     with:
-      working_directory: ./terraform
+      working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   terraform-lint:
@@ -58,7 +60,7 @@ jobs:
     name: Terraform Lint
     uses: ./.github/workflows/reusable_tf_lint.yaml
     with:
-      working_directory: ./terraform
+      working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   terraform-analysis:
@@ -66,7 +68,7 @@ jobs:
     name: Terraform Security
     uses: ./.github/workflows/reusable_tf_analysis.yaml
     with:
-      working_directory: ./terraform
+      working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   terraform-plan:
@@ -74,7 +76,7 @@ jobs:
     name: Terraform Plan
     uses: ./.github/workflows/reusable_tf_plan.yaml
     with:
-      working_directory: ./terraform
+      working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   manual-approval:
@@ -91,5 +93,5 @@ jobs:
     name: Terraform Apply
     uses: ./.github/workflows/reusable_tf_apply.yaml
     with:
-      working_directory: ./terraform
+      working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}

@@ -14,7 +14,7 @@ variable "default_region" {
 
 data "github_repository_file" "global_config" {
   repository          = "cloudopsaas/global-config"
-  branch              = "v1.0.10"
+  branch              = "v1.0.9"
   file                = "lz/global_config.json"
 }
 

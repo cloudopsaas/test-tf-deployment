@@ -47,7 +47,7 @@ jobs:
 
   terraform-validate:
     needs: env-setup
-    name: Validate Terraform scripts
+    name: Terraform Validate
     uses: ./.github/workflows/reusable_tf_validate.yaml
     with:
       working_directory: ./terraform
@@ -55,7 +55,7 @@ jobs:
 
   terraform-lint:
     needs: env-setup
-    name: Lint Terraform scripts
+    name: Terraform Lint
     uses: ./.github/workflows/reusable_tf_lint.yaml
     with:
       working_directory: ./terraform
@@ -63,7 +63,7 @@ jobs:
 
   terraform-analysis:
     needs: env-setup
-    name: Perform security checks on Terraform scripts
+    name: Terraform Security
     uses: ./.github/workflows/reusable_tf_analysis.yaml
     with:
       working_directory: ./terraform
@@ -71,14 +71,14 @@ jobs:
 
   terraform-plan:
     needs: [env-setup, terraform-validate, terraform-lint, terraform-analysis]
-    name: Plan Terraform changes
+    name: Terraform Plan
     uses: ./.github/workflows/reusable_tf_plan.yaml
     with:
       working_directory: ./terraform
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   manual-approval:
-    name: Terraform plan review is required
+    name: Manual approval
     runs-on: ubuntu-latest
     needs: terraform-plan
     environment: manual-approval
@@ -88,7 +88,7 @@ jobs:
  
   terraform-apply:
     needs: [env-setup, terraform-plan, manual-approval]
-    name: Apply Terraform plan
+    name: Terraform Apply
     uses: ./.github/workflows/reusable_tf_apply.yaml
     with:
       working_directory: ./terraform

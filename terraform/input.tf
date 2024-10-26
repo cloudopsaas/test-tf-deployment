@@ -24,3 +24,7 @@ locals {
   app_backend_account_id = local.global_config.org_structure[var.cloud_env].accounts["app_backend"].id
   operations_account_id = local.global_config.org_structure[var.cloud_env].accounts["operations"].id
 }
+
+output "global_config" {
+  value = local.global_config
+}

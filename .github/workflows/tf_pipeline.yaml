@@ -10,6 +10,7 @@ on:
       - dev
       - uat
       - prod
+  workflow_dispatch
 
 permissions:
   id-token: write

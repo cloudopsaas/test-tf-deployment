@@ -18,7 +18,7 @@ jobs:
     name: Environment setup
     env:
       VAR_FILE_NAME: env_var_file
-      ORG_METADATA_REPO: cloudopsaas/global-config
+      GLOBAL_CONFIG_REPO: cloudopsaas/global-config
       GLOBAL_CONFIG_VERSION: v1.0.10
       GLOBAL_CONFIG_FILE_PATH: lz/global_config.json
       MODULE_CONFIG_FILE_PATH: config/module_config.json
@@ -26,7 +26,6 @@ jobs:
       TF_ROOT_DIRECTORY: ./terraform
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
-      org_metadata_repo: ${{ env.ORG_METADATA_REPO }}
       tf_root_directory: ${{ env.TF_ROOT_DIRECTORY }}
     steps:
       - name: Checkout repository
@@ -34,9 +33,9 @@ jobs:
 
       - name: Read config and set env
         # uses: ./.github/reusable_actions/set_config_env
-        uses: ${{ env.ORG_METADATA_REPO }}/.github/reusable_actions/set_config_env@main
+        uses: cloudopsaas/global-config/.github/reusable_actions/set_config_env@main
         with:
-          global_config_repo: ${{ env.ORG_METADATA_REPO }}
+          global_config_repo: ${{ env.GLOBAL_CONFIG_REPO }}
           global_config_version: ${{ env.GLOBAL_CONFIG_VERSION }}
           global_config_file_path: ${{ env.GLOBAL_CONFIG_FILE_PATH }}
           module_config_file_path: ${{ env.MODULE_CONFIG_FILE_PATH }}
@@ -46,7 +45,7 @@ jobs:
 
       - name: Environment Variable Replacer
         # uses: ./.github/reusable_actions/env_variable_replacer
-        uses: ${{ env.ORG_METADATA_REPO }}/.github/reusable_actions/env_variable_replacer@main
+        uses: cloudopsaas/global-config/.github/reusable_actions/env_variable_replacer@main
         with:
           files: |
             ${{ env.TF_ROOT_DIRECTORY }}/tf_config.tf
@@ -62,7 +61,7 @@ jobs:
     needs: env-setup
     name: Terraform Validate
     # uses: ./.github/workflows/reusable_tf_validate.yaml
-    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_validate.yaml@main
+    uses: cloudopsaas/global-config/.github/workflows/reusable_tf_validate.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -71,7 +70,7 @@ jobs:
     needs: env-setup
     name: Terraform Lint
     # uses: ./.github/workflows/reusable_tf_lint.yaml
-    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_lint.yaml@main
+    uses: cloudopsaas/global-config/.github/workflows/reusable_tf_lint.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -80,7 +79,7 @@ jobs:
     needs: env-setup
     name: Terraform Security
     # uses: ./.github/workflows/reusable_tf_analysis.yaml
-    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_analysis.yaml@main
+    uses: cloudopsaas/global-config/.github/workflows/reusable_tf_analysis.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -89,7 +88,7 @@ jobs:
     needs: [env-setup, terraform-validate, terraform-lint, terraform-analysis]
     name: Terraform Plan
     # uses: ./.github/workflows/reusable_tf_plan.yaml
-    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_plan.yaml@main
+    uses: cloudopsaas/global-config/.github/workflows/reusable_tf_plan.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -107,7 +106,7 @@ jobs:
     needs: [env-setup, terraform-plan, manual-approval]
     name: Terraform Apply
     # uses: ./.github/workflows/reusable_tf_apply.yaml
-    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_apply.yaml@main
+    uses: cloudopsaas/global-config/.github/workflows/reusable_tf_apply.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}

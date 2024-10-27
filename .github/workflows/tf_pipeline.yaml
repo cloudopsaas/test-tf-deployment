@@ -62,7 +62,7 @@ jobs:
     needs: env-setup
     name: Terraform Validate
     # uses: ./.github/workflows/reusable_tf_validate.yaml
-    uses: ${{ env.ORG_METADATA_REPO }}/.github/workflows/reusable_tf_validate.yaml@main
+    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_validate.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -71,7 +71,7 @@ jobs:
     needs: env-setup
     name: Terraform Lint
     # uses: ./.github/workflows/reusable_tf_lint.yaml
-    uses: ${{ env.ORG_METADATA_REPO }}/.github/workflows/reusable_tf_lint.yaml@main
+    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_lint.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -80,7 +80,7 @@ jobs:
     needs: env-setup
     name: Terraform Security
     # uses: ./.github/workflows/reusable_tf_analysis.yaml
-    uses: ${{ env.ORG_METADATA_REPO }}/.github/workflows/reusable_tf_analysis.yaml@main
+    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_analysis.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -89,7 +89,7 @@ jobs:
     needs: [env-setup, terraform-validate, terraform-lint, terraform-analysis]
     name: Terraform Plan
     # uses: ./.github/workflows/reusable_tf_plan.yaml
-    uses: ${{ env.ORG_METADATA_REPO }}/.github/workflows/reusable_tf_plan.yaml@main
+    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_plan.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
@@ -107,7 +107,7 @@ jobs:
     needs: [env-setup, terraform-plan, manual-approval]
     name: Terraform Apply
     # uses: ./.github/workflows/reusable_tf_apply.yaml
-    uses: ${{ env.ORG_METADATA_REPO }}/.github/workflows/reusable_tf_apply.yaml@main
+    uses: ${{ needs.env-setup.outputs.org_metadata_repo }}/.github/workflows/reusable_tf_apply.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}

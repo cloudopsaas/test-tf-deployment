@@ -1,6 +1,7 @@
 name: 'Terraform Pipeline'
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev
@@ -10,7 +11,6 @@ on:
       - dev
       - uat
       - prod
-  workflow_dispatch
 
 permissions:
   id-token: write

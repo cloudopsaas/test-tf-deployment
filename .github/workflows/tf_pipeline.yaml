@@ -1,8 +1,11 @@
 name: 'Terraform Pipeline'
 
 on:
-  # Triggers the workflow on push when both conditions (branch & paths) match
   push:
+    branches:
+      - dev
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
     branches:
       - dev
       - uat
@@ -32,7 +35,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Read config and set env
-        # uses: ./.github/reusable_actions/set_config_env
         uses: cloudopsaas/global-config/.github/reusable_actions/set_config_env@main
         with:
           global_config_repo: ${{ env.GLOBAL_CONFIG_REPO }}
@@ -44,7 +46,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Environment Variable Replacer
-        # uses: ./.github/reusable_actions/env_variable_replacer
         uses: cloudopsaas/global-config/.github/reusable_actions/env_variable_replacer@main
         with:
           files: |
@@ -58,42 +59,43 @@ jobs:
           retention-days: 1
 
   terraform-validate:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
     needs: env-setup
     name: Terraform Validate
-    # uses: ./.github/workflows/reusable_tf_validate.yaml
     uses: cloudopsaas/global-config/.github/workflows/reusable_tf_validate.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   terraform-lint:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
     needs: env-setup
     name: Terraform Lint
-    # uses: ./.github/workflows/reusable_tf_lint.yaml
     uses: cloudopsaas/global-config/.github/workflows/reusable_tf_lint.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   terraform-analysis:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
     needs: env-setup
     name: Terraform Security
-    # uses: ./.github/workflows/reusable_tf_analysis.yaml
     uses: cloudopsaas/global-config/.github/workflows/reusable_tf_analysis.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   terraform-plan:
-    needs: [env-setup, terraform-validate, terraform-lint, terraform-analysis]
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) }}
+    needs: env-setup
     name: Terraform Plan
-    # uses: ./.github/workflows/reusable_tf_plan.yaml
     uses: cloudopsaas/global-config/.github/workflows/reusable_tf_plan.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
 
   manual-approval:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) }}
     name: Manual approval
     runs-on: ubuntu-latest
     needs: terraform-plan
@@ -103,9 +105,9 @@ jobs:
         run: echo "Terraform plan was approved"
  
   terraform-apply:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) }}
     needs: [env-setup, terraform-plan, manual-approval]
     name: Terraform Apply
-    # uses: ./.github/workflows/reusable_tf_apply.yaml
     uses: cloudopsaas/global-config/.github/workflows/reusable_tf_apply.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}

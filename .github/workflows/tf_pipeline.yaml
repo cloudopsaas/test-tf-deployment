@@ -23,14 +23,16 @@ jobs:
     env:
       VAR_FILE_NAME: env_var_file
       GLOBAL_CONFIG_REPO: cloudopsaas/global-config
-      GLOBAL_CONFIG_VERSION: v1.0.11
+      GLOBAL_CONFIG_VERSION: v1.0.12
       GLOBAL_CONFIG_FILE_PATH: lz/global_config.json
       MODULE_CONFIG_FILE_PATH: config/module_config.json
       CLOUD_ENV_VARIABLE_NAME: TF_VAR_cloud_env
       TF_ROOT_DIRECTORY: ./terraform
+      ARTIFACTS_RETENTION_DAYS: 5
     outputs:
       var_file_name: ${{ env.VAR_FILE_NAME }}
       tf_root_directory: ${{ env.TF_ROOT_DIRECTORY }}
+      artifacts_retention_days: ${{ env.ARTIFACTS_RETENTION_DAYS }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -57,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./
-          retention-days: 1
+          retention-days: ${{ env.ARTIFACTS_RETENTION_DAYS }}
 
   terraform-validate:
     if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
@@ -89,20 +91,22 @@ jobs:
   temp-terraform-plan:
     if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
     needs: env-setup
-    name: Terraform Plan
+    name: Temporary Terraform Plan
     uses: cloudopsaas/global-config/.github/workflows/reusable_tf_plan.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
+      artifacts_retention_days: ${{ needs.env-setup.outputs.artifacts_retention_days }}
 
   final-terraform-plan:
     if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) }}
     needs: env-setup
-    name: Terraform Plan
+    name: Final Terraform Plan
     uses: cloudopsaas/global-config/.github/workflows/reusable_tf_plan.yaml@main
     with:
       working_directory: ${{ needs.env-setup.outputs.tf_root_directory }}
       var_file_name: ${{ needs.env-setup.outputs.var_file_name }}
+      artifacts_retention_days: ${{ needs.env-setup.outputs.artifacts_retention_days }}
 
   manual-approval:
     if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) }}

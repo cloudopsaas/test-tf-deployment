@@ -23,7 +23,7 @@ jobs:
     env:
       VAR_FILE_NAME: env_var_file
       GLOBAL_CONFIG_REPO: cloudopsaas/global-config
-      GLOBAL_CONFIG_VERSION: v1.0.12
+      GLOBAL_CONFIG_VERSION: v1.0.13
       GLOBAL_CONFIG_FILE_PATH: lz/global_config.json
       MODULE_CONFIG_FILE_PATH: config/module_config.json
       CLOUD_ENV_VARIABLE_NAME: TF_VAR_cloud_env

@@ -7,7 +7,7 @@
     "dev":{
         "accounts": {
             "app_backend": {
-                "vpc_name": "test-backend",
+                "vpc_name": "test-backend1",
                 "primary_cidr_block": "10.0.0.0/16"
             },
             "operations": {
